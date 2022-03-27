@@ -7,7 +7,7 @@ const requiresToken = require('../requiresToken')
 const user = require('../../models/user')
 
 // POST /users/register -- CREATE a new user
-router.post('/register', async  (req, res) => {
+router.post('/register', async (req, res) => {
   try {
     // check if the user exist already -- dont allow them to sign up again
     const userCheck = await db.User.findOne({
@@ -23,6 +23,7 @@ router.post('/register', async  (req, res) => {
     // create a user in th db
     const newUser = await db.User.create({
       name: req.body.name,
+      username: req.body.username,
       email: req.body.email,
       password: hashedPassword
     })
@@ -30,6 +31,7 @@ router.post('/register', async  (req, res) => {
     // create a jwt payload to send back to the client 
     const payload = {
       name: newUser.name,
+      username: newUser.username,
       email: newUser.email,
       id: newUser.id
     }
@@ -40,7 +42,7 @@ router.post('/register', async  (req, res) => {
     res.json({ token })
   } catch (err) {
     console.log(err)
-    res.status(503).json({ msg: 'oops server error 503 🔥😭' }) 
+    res.status(503).json({ msg: 'oops server error 503 🔥😭' })
   }
 })
 // POST /users/login -- validate login credentials 
@@ -81,5 +83,27 @@ router.get('/auth-locked', requiresToken, (req, res) => {
   res.json({ msg: 'welcome to the auth locked route, congrats on geting thru the middleware 🎉' })
 })
 
+//PUT /users/id -> edit password or username
+router.put('/:id', async (req, res) => {
+  try {
+    const options = { new: true }
+
+    //find the specific user in the db and update it
+    const updateUser = await db.User.findOneAndUpdate({
+      _id: req.params.id
+    },
+      req.body,
+      options
+    )
+    const salt = 12
+    const hashedPassword = await bcrypt.hash(req.body.password, salt)
+
+    if (!updateUser) return res.status(404).json({ msg: 'incorrect id' })
+    res.json(updateUser)
+  } catch (error) {
+    console.log(error)
+    res.status(503).json({ msg: 'oops something went wrong' })
+  }
+})
 
 module.exports = router
