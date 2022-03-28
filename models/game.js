@@ -1,9 +1,9 @@
 const mongoose = require('mongoose')
 
 const gameSchema = new mongoose.Schema({
-    userId: Number,
+    userId: String,
     score: Number,
-    artistId: Number
+    artistId: String
 }, {timestamps: true})
 
 module.exports = mongoose.model('Game', gameSchema)
