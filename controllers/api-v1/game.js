@@ -17,6 +17,19 @@ router.get('/', async (req, res) => {
         res.status(503).json({ msg: 'Database or server room is on fire 🔥'})
     }
 })
+// router.get('/:id', (req, res) => {
+//     const { id } = req.params
+//     console.log(id)
+//     db.Game.findById(id)
+//         .then(game => {
+//             if (!game) return res.status(404).json({ msg: 'game not found' })
+//             res.json(game)
+//         })
+//         .catch(err => {
+//             console.log(err)
+//             res.status(503).json({ msg: 'server room is burned down' })
+//         })
+// })
 
 
 // POST /game/:id
@@ -26,6 +39,12 @@ router.post('/:id', async (req, res) => {
     try {
         const postScore = await db.Game.create(req.body)
         res.status(201).json(postScore)
+        // const newUser = await db.User.create({
+        //     name: req.body.name,
+        //     username: req.body.username,
+        //     email: req.body.email,
+        //     password: hashedPassword
+        // })
     } catch (error) {
         console.log(error)
         res.status(503).json({ msg: 'Database or server room is on fire 🔥' })
