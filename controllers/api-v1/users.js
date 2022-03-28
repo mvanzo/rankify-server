@@ -95,15 +95,30 @@ router.put('/:id', async (req, res) => {
       req.body,
       options
     )
-    const salt = 12
-    const hashedPassword = await bcrypt.hash(req.body.password, salt)
+    // const salt = 12
+    // const hashedPassword = await bcrypt.hash(req.body.password, salt)
 
-    if (!updateUser) return res.status(404).json({ msg: 'incorrect id' })
+    if (!updateUser) return res.status(404).json({ msg: 'User Not Found' })
     res.json(updateUser)
   } catch (error) {
     console.log(error)
     res.status(503).json({ msg: 'oops something went wrong' })
   }
 })
+
+// PROFILE PAGE ROUTES
+// 3-27 draft
+// GET /users/profile
+router.get('/profile', async (req, res) => {
+  try {
+    // display past scores?
+    const scores = await db.Game.find({ score })
+    res.json(scores)
+  } catch (error) {
+    console.log(error)
+    res.status(503).json({ msg: 'Database or server room is on fire 🔥'})
+  }
+})
+
 
 module.exports = router
