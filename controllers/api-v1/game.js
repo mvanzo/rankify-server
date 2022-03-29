@@ -37,12 +37,16 @@ router.get('/', async (req, res) => {
 // POST /users/game/:id (create a score with :id)-- would this be /profile?? and just a get route instead of a post route?
 router.post('/:id', async (req, res) => {
     try {
-        const postScore = await db.Game.create({
+        // create game result for user
+        const postGame = await db.Game.create({
             userId: req.body.userId,
             score: req.body.score,
             artistId: req.params.id
         })
-        res.status(201).json(postScore)
+        // find user and add postGame to their scores
+        const userToUpdate = await db.User.findByIdAndUpdate(req.body.userId, {$push: {games: postGame._id}})
+        userToUpdate.save();
+        res.status(201).json(userToUpdate)
         // const newUser = await db.User.create({
         //     name: req.body.name,
         //     username: req.body.username,

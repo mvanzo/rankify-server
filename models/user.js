@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
     // array of gameSchema objectIds
   }],
   games: [{
-    type: String
+    type: mongoose.Schema.Types.ObjectId, ref: 'Game'
     // array of game objectIds
   }]
 }, {timestamps: true})
