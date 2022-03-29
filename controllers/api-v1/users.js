@@ -23,7 +23,6 @@ router.post('/register', async (req, res) => {
     // create a user in th db
     const newUser = await db.User.create({
       name: req.body.name,
-      username: req.body.username,
       email: req.body.email,
       password: hashedPassword
     })
@@ -31,7 +30,6 @@ router.post('/register', async (req, res) => {
     // create a jwt payload to send back to the client 
     const payload = {
       name: newUser.name,
-      username: newUser.username,
       email: newUser.email,
       id: newUser.id
     }
