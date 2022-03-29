@@ -109,11 +109,10 @@ router.put('/:id', async (req, res) => {
 // PROFILE PAGE ROUTES
 // 3-27 draft
 // GET /users/profile
-router.get('/profile', async (req, res) => {
+router.get('/profile', requiresToken, async (req, res) => {
   try {
-    // display past scores?
-    const scores = await db.Game.find({ score })
-    res.json(scores)
+    const userGameHistory = await db.User.findById(res.locals.user._id).populate({path:'games'})
+    res.json(userGameHistory.games)
   } catch (error) {
     console.log(error)
     res.status(503).json({ msg: 'Database or server room is on fire 🔥'})
