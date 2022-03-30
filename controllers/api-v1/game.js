@@ -41,6 +41,7 @@ router.post('/:id', async (req, res) => {
         const postGame = await db.Game.create({
             userId: req.body.userId,
             score: req.body.score,
+            songsPlayed: req.body.songsPlayed,
             artistId: req.params.id
         })
         // find user and add postGame to their scores
