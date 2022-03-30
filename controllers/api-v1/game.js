@@ -66,7 +66,7 @@ router.post('/:id', async (req, res) => {
 // DELETE /users/game/:id (delete a game @ :id)
 router.delete('/:id', async (req, res) => {
     try {
-        const foundScore = await db.Game.findByIdAndDelete(req.params._id)
+        const foundScore = await db.Game.findByIdAndDelete(req.params.id)
         res.status(204).json({ msg: 'Score has been successfully deleted' })
     } catch (error) {
         console.log(error)
