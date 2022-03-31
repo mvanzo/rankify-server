@@ -4,6 +4,7 @@ const gameSchema = new mongoose.Schema({
     userId: String,
     score: Number,
     artistId: String,
+    artistName: String,
     // need to add array of spotify song ids that were played in the game
     // songs: [{type: Number}]
     songsPlayed: [{
@@ -12,6 +13,6 @@ const gameSchema = new mongoose.Schema({
         songUrl: String,
         answer: Boolean
     }]
-}, {timestamps: true})
+}, { timestamps: true })
 
 module.exports = mongoose.model('Game', gameSchema)
