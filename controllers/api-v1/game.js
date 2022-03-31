@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
         res.json(games)
     } catch (error) {
         console.log(error)
-        res.status(503).json({ msg: 'Database or server room is on fire 🔥'})
+        res.status(503).json({ msg: 'Database or server room is on fire 🔥' })
     }
 })
 // router.get('/:id', (req, res) => {
@@ -39,13 +39,15 @@ router.post('/:id', async (req, res) => {
     try {
         // create game result for user
         const postGame = await db.Game.create({
+            artistName: req.body.artistName,
+            difficulty: req.body.difficulty,
             userId: req.body.userId,
             score: req.body.score,
             songsPlayed: req.body.songsPlayed,
             artistId: req.params.id
         })
         // find user and add postGame to their scores
-        const userToUpdate = await db.User.findByIdAndUpdate(req.body.userId, {$push: {games: postGame._id}})
+        const userToUpdate = await db.User.findByIdAndUpdate(req.body.userId, { $push: { games: postGame._id } })
         userToUpdate.save();
         res.status(201).json(userToUpdate)
         // const newUser = await db.User.create({
@@ -70,7 +72,7 @@ router.delete('/:id', async (req, res) => {
         res.status(204).json({ msg: 'Score has been successfully deleted' })
     } catch (error) {
         console.log(error)
-        res.status(503).json({ msg: 'Database or server room is on fire 🔥'})
+        res.status(503).json({ msg: 'Database or server room is on fire 🔥' })
     }
 })
 

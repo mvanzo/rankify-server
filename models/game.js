@@ -5,6 +5,7 @@ const gameSchema = new mongoose.Schema({
     score: Number,
     artistId: String,
     artistName: String,
+    difficulty: String,
     // need to add array of spotify song ids that were played in the game
     // songs: [{type: Number}]
     songsPlayed: [{
