@@ -18,7 +18,6 @@ router.get('/', async (req, res) => {
     }
 })
 
-
 // POST /game/:id (create a score with :id)
 router.post('/:id', async (req, res) => {
     try {
