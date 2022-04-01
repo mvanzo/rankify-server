@@ -55,7 +55,6 @@ router.post('/login', async (req, res) => {
 
   // check the password from the req.body again the password in the db
   const matchPasswords = await bcrypt.compare(req.body.password, foundUser.password)
-  console.log(matchPasswords)
 
   // if the provided info does not match -- send back an error message and return
   if (!matchPasswords) return res.status(400).json({ msg: 'bad login credentials 😢' })
@@ -76,35 +75,10 @@ router.post('/login', async (req, res) => {
 
 // GET /users/auth-locked -- example of checking an jwt and not serving data unless the jwt is valid
 router.get('/auth-locked', requiresToken, (req, res) => {
-  // here we have acces to the user on the res.locals
-  console.log('logged in user', res.locals.user)
   res.json({ msg: 'welcome to the auth locked route, congrats on geting thru the middleware 🎉' })
 })
 
-//PUT /users/id -> edit password or username-- JON
-// router.put('/:id', async (req, res) => {
-//   try {
-//     const options = { new: true }
-
-//     //find the specific user in the db and update it
-//     const updateUser = await db.User.findOneAndUpdate({
-//       _id: req.params.id
-//     },
-//       req.body,
-//       options
-//     )
-//     // const salt = 12
-//     // const hashedPassword = await bcrypt.hash(req.body.password, salt)
-
-//     if (!updateUser) return res.status(404).json({ msg: 'User Not Found' })
-//     res.json(updateUser)
-//   } catch (error) {
-//     console.log(error)
-//     res.status(503).json({ msg: 'oops something went wrong' })
-//   }
-// })
-
-// 3-29 draft
+// PUT /users/changepassword
 router.put('/changepassword', async (req, res) => {
   try {
     // find user by email
@@ -112,8 +86,6 @@ router.put('/changepassword', async (req, res) => {
     const oldPassword = user.password
     const salt = 12
     const hashedPassword = await bcrypt.hash(req.body.password, salt)
-    // const hash = await bcrypt.hash(req.body.password, salt)
-    // bcrypt.compare(req.body.password, oldPassword, function (err,result) {
       if (hashedPassword === oldPassword) {
         res.json({ msg: 'passwords are the same' })
       } else {
@@ -121,7 +93,6 @@ router.put('/changepassword', async (req, res) => {
           {password: hashedPassword},
           { new: true }
           )
-        // user.save()
         res.json({ updatedUser })
       }
   } catch (error) {
@@ -130,33 +101,6 @@ router.put('/changepassword', async (req, res) => {
   }
 })
 
-// router.put('/changepassword', async (req, res) => {
-//   try {
-//     const user = await db.User.findOne({ email: req.body.email })
-//     const isValid = await bcrypt.compare(req.body.password)
-//     if (!isValid) {
-//       throw new Error("Invalid password")
-//     }
-//     const options = { new: true }
-//     const salt = 12
-//     const hashedPassword = await bcrypt.hash(req.body.password, salt)
-//     await db.User.findOneAndUpdate({
-//       _id: req.params.id,
-//       password: hashedPassword
-//     },
-//       req.body,
-//       options
-//     )
-//   } catch (error) {
-//     console.log(error)
-//     res.status(503).json({ msg: 'oops something went wrong' })
-//   }
-// })
-
-
-
-// PROFILE PAGE ROUTES
-// 3-27 draft
 // GET /users/profile
 router.get('/profile', requiresToken, async (req, res) => {
   try {
