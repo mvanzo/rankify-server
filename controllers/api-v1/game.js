@@ -14,48 +14,25 @@ router.get('/', async (req, res) => {
         res.json(games)
     } catch (error) {
         console.log(error)
-        res.status(503).json({ msg: 'Database or server room is on fire 🔥' })
+        res.status(503).json({ msg: 'Database or server room is on fire 🔥'})
     }
 })
-// router.get('/:id', (req, res) => {
-//     const { id } = req.params
-//     console.log(id)
-//     db.Game.findById(id)
-//         .then(game => {
-//             if (!game) return res.status(404).json({ msg: 'game not found' })
-//             res.json(game)
-//         })
-//         .catch(err => {
-//             console.log(err)
-//             res.status(503).json({ msg: 'server room is burned down' })
-//         })
-// })
 
 
-// POST /game/:id
-// 3-27 draft
-// POST /users/game/:id (create a score with :id)-- would this be /profile?? and just a get route instead of a post route?
+// POST /game/:id (create a score with :id)
 router.post('/:id', async (req, res) => {
     try {
         // create game result for user
         const postGame = await db.Game.create({
-            artistName: req.body.artistName,
-            difficulty: req.body.difficulty,
             userId: req.body.userId,
             score: req.body.score,
             songsPlayed: req.body.songsPlayed,
             artistId: req.params.id
         })
         // find user and add postGame to their scores
-        const userToUpdate = await db.User.findByIdAndUpdate(req.body.userId, { $push: { games: postGame._id } })
+        const userToUpdate = await db.User.findByIdAndUpdate(req.body.userId, {$push: {games: postGame._id}})
         userToUpdate.save();
         res.status(201).json(userToUpdate)
-        // const newUser = await db.User.create({
-        //     name: req.body.name,
-        //     username: req.body.username,
-        //     email: req.body.email,
-        //     password: hashedPassword
-        // })
     } catch (error) {
         console.log(error)
         res.status(503).json({ msg: 'Database or server room is on fire 🔥' })
@@ -63,21 +40,15 @@ router.post('/:id', async (req, res) => {
 })
 
 
-// DELETE /game/:id
-// 3-27 draft
-// DELETE /users/game/:id (delete a game @ :id)
+// DELETE /game/:id (delete a game @ :id)
 router.delete('/:id', async (req, res) => {
     try {
         const foundScore = await db.Game.findByIdAndDelete(req.params.id)
         res.status(204).json({ msg: 'Score has been successfully deleted' })
     } catch (error) {
         console.log(error)
-        res.status(503).json({ msg: 'Database or server room is on fire 🔥' })
+        res.status(503).json({ msg: 'Database or server room is on fire 🔥'})
     }
 })
-
-
-// POST /song -- stretch goal
-// save song id and preview url
 
 module.exports = router
